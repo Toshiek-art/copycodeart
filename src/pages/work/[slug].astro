@@ -1,0 +1,21 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import projects from "../../data/projects";
+import ProjectTemplate from "../../templates/ProjectTemplate.astro";
+
+export function getStaticPaths() {
+  const items = projects.filter(p => p.status === "published" && p.visible);
+  return items.map(p => ({ params: { slug: p.slug }, props: { item: p } }));
+}
+
+const { item } = Astro.props;
+const standalone = Astro.url.searchParams.has("standalone");
+---
+<BaseLayout
+  title={`${item.title} — Work — CopyCodeArt`}
+  description={item.excerpt}
+  standalone={standalone}
+  ogImage={item.cover ?? "/og-default.png"}
+>
+  <ProjectTemplate item={item} standalone={standalone} />
+</BaseLayout>

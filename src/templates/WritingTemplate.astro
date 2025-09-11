@@ -1,0 +1,19 @@
+---
+const { item, standalone = false } = Astro.props;
+/** item: { title, excerpt, pullquote?, readingTime? } */
+---
+<section class={`max-w-3xl mx-auto p-6 ${standalone ? "pt-12" : ""}`}>
+  <h1 class="text-3xl font-bold mb-1">{item.title}</h1>
+  <p class="text-gray-600">{item.excerpt}</p>
+  {item.readingTime && <p class="text-xs text-gray-500 mt-1">{item.readingTime} min read</p>}
+
+  {item.pullquote && (
+    <blockquote class="border-l-4 pl-4 my-6 text-lg italic text-gray-700">
+      “{item.pullquote}”
+    </blockquote>
+  )}
+
+  <article class="max-w-none space-y-4">
+    <p>[Placeholder — Manus pastes body paragraphs/blocks here]</p>
+  </article>
+</section>

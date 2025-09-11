@@ -1,0 +1,21 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import projects from "../data/projects";
+const items = projects.filter(p => p.status === "published" && p.visible);
+---
+<BaseLayout title="Work — CopyCodeArt" description="Selected projects.">
+  <section class="max-w-3xl mx-auto p-6">
+    <h1 class="text-3xl font-bold mb-4">Selected Work</h1>
+    <ul class="grid gap-4">
+      {items.map(p => (
+        <li class="border rounded-lg p-4 bg-white">
+          <a class="font-semibold underline" href={`/work/${p.slug}`}>{p.title}</a>
+          <p class="text-gray-600 mt-1">{p.excerpt}</p>
+          <div class="mt-2 text-sm">
+            <a class="underline" href={`/work/${p.slug}?standalone=1`}>Open as mini-landing</a>
+          </div>
+        </li>
+      ))}
+    </ul>
+  </section>
+</BaseLayout>

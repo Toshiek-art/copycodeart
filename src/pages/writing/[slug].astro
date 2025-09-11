@@ -1,0 +1,20 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import writings from "../../data/writing";
+import WritingTemplate from "../../templates/WritingTemplate.astro";
+
+export function getStaticPaths() {
+  const items = writings.filter(w => w.status === "published" && w.visible);
+  return items.map(w => ({ params: { slug: w.slug }, props: { item: w } }));
+}
+
+const { item } = Astro.props;
+const standalone = Astro.url.searchParams.has("standalone");
+---
+<BaseLayout
+  title={`${item.title} — Writing — CopyCodeArt`}
+  description={item.excerpt}
+  standalone={standalone}
+>
+  <WritingTemplate item={item} standalone={standalone} />
+</BaseLayout>
