@@ -1,9 +1,5 @@
-// functions/admin/logout.ts
-import { generateLogoutURL } from "@cloudflare/pages-plugin-cloudflare-access/api";
-
 export const onRequest: PagesFunction = async ({ env }) => {
-  return new Response(null, {
-    status: 302,
-    headers: { Location: generateLogoutURL({ domain: env.CF_ACCESS_TEAM_DOMAIN as string }) },
-  });
+  const team = (env.CF_ACCESS_TEAM_DOMAIN || "").replace(/\/$/, "");
+  const url = team ? `${team}/cdn-cgi/access/logout` : "/";
+  return new Response(null, { status: 302, headers: { Location: url } });
 };
