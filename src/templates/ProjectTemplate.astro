@@ -1,29 +1,24 @@
 ---
-const { item, standalone = false } = Astro.props;
-/** item: { title, excerpt, cover?, metrics?, gallery?[] } */
+const { item } = Astro.props; // Project
 ---
-<section class={`max-w-3xl mx-auto p-6 ${standalone ? "pt-12" : ""}`}>
-  <h1 class="text-3xl font-bold mb-2">{item.title}</h1>
-  <p class="text-gray-600 mb-6">{item.excerpt}</p>
+<article class="prose max-w-3xl">
+  <header>
+    <h1 class="text-3xl font-bold">{item.title}</h1>
+    <p class="opacity-80">{item.excerpt}</p>
+    {item.metrics && (
+      <ul class="mt-4 grid grid-cols-2 gap-2 text-sm">
+        {item.metrics.map(m => <li><strong>{m.label}:</strong> {m.value}</li>)}
+      </ul>
+    )}
+  </header>
 
-  {item.metrics && item.metrics.length > 0 && (
-    <ul class="grid grid-cols-2 gap-4 mb-8">
-      {item.metrics.map((m) => (
-        <li class="bg-white border rounded-lg p-4">
-          <div class="text-2xl font-bold">{m.value}</div>
-          <div class="text-sm text-gray-500">{m.label}</div>
-        </li>
-      ))}
-    </ul>
-  )}
-
-  <article class="max-w-none space-y-4">
-    <p>[Placeholder — Manus pastes Challenge → Approach → Outcome here]</p>
-  </article>
+  <div class="mt-8">
+    <slot />
+  </div>
 
   {item.gallery && item.gallery.length > 0 && (
-    <div class="grid grid-cols-2 gap-3 mt-8">
-      {item.gallery.map((src) => <img src={src} alt={item.title} class="rounded-lg border" />)}
+    <div class="mt-8 grid grid-cols-2 gap-3">
+      {item.gallery.map(src => <img src={src} alt="" loading="lazy" />)}
     </div>
   )}
-</section>
+</article>

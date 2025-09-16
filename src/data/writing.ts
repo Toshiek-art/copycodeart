@@ -1,33 +1,36 @@
 export type Writing = {
-  slug: string; title: string; excerpt: string;
-  category: "Landing" | "Case Study" | "Microcopy" | "Long-form";
-  status: "draft" | "published" | "archived";
-  visible: boolean; navVisible: boolean;
-  pullquote?: string; readingTime?: number;
+  slug: string;
+  title: string;
+  excerpt: string;
+  category?: string;
+  status: 'published' | 'draft' | 'archived';
+  visible: boolean;
+  navVisible?: boolean;
+  pullquote?: string;
+  readingTime?: string;
 };
 
-const writings: Writing[] = [
+export const writings: Writing[] = [
   {
-    slug: "voice-and-clarity",
-    title: "Voice & Clarity for SaaS Onboarding",
-    excerpt: "Restructuring first-run with crisp, low-friction copy.",
-    category: "Case Study",
-    status: "published",
+    slug: 'manus-design-notes',
+    title: 'Design notes per Manus AI',
+    excerpt:
+      'Parametri e regole per generare pagine coerenti con il nostro stile e il nostro flusso.',
+    category: 'Notes',
+    status: 'published',
     visible: true,
-    navVisible: true,
-    pullquote: "Reduce friction, reveal intent.",
-    readingTime: 6
+    pullquote:
+      'Le macchine non pensano: compongono. Noi decidiamo la metrica.',
+    readingTime: '4 min'
   },
   {
-    slug: "microcopy-does-the-lifting",
-    title: "Microcopy Does the Lifting",
-    excerpt: "Tiny words, big outcomes.",
-    category: "Microcopy",
-    status: "published",
+    slug: 'access-diary',
+    title: 'Zero Trust Access – Diario di bordo',
+    excerpt:
+      'Problema, ipotesi, fix: come abbiamo chiuso /admin in meno di un’ora.',
+    category: 'Build Log',
+    status: 'published',
     visible: true,
-    navVisible: false,
-    readingTime: 3
+    readingTime: '3 min'
   }
 ];
-
-export default writings;

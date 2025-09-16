@@ -1,31 +1,41 @@
 export type Project = {
-  slug: string; title: string; excerpt: string;
-  status: "draft" | "published" | "archived";
-  visible: boolean; navVisible: boolean;
+  slug: string;
+  title: string;
+  excerpt: string;
+  status: 'published' | 'draft' | 'archived';
+  visible: boolean;
+  navVisible?: boolean;
   cover?: string;
   metrics?: { label: string; value: string }[];
   gallery?: string[];
 };
 
-const projects: Project[] = [
+export const projects: Project[] = [
   {
-    slug: "ai-portfolio-booster",
-    title: "AI Portfolio Booster",
-    excerpt: "Landing + copy framework to lift profile→DM conversion.",
-    status: "published",
+    slug: 'copycodeart-admin',
+    title: 'CopyCodeArt Admin & Access',
+    excerpt:
+      'Hardening del pannello /admin con Cloudflare Zero Trust (Google + OTP), flusso pulito e SSG su Pages.',
+    status: 'published',
     visible: true,
-    navVisible: true,
-    metrics: [{ label: "Profile → DM", value: "+38%" }, { label: "Time to ship", value: "48h" }],
+    cover: '/og-default.png',
+    metrics: [
+      { label: 'Login', value: 'Google + OTP' },
+      { label: 'Build', value: 'Astro → CF Pages' }
+    ],
     gallery: []
   },
   {
-    slug: "clarity-first-web",
-    title: "Clarity-First Web",
-    excerpt: "Ultra-fast one-pager template for freelancers.",
-    status: "published",
+    slug: 'ai-visuals-studies',
+    title: 'AI Visual Studies',
+    excerpt:
+      'Studio di stile per visual AI ibridi: linee audaci, contrasti morbidi, bagliori come metafora di idee.',
+    status: 'published',
     visible: true,
-    navVisible: false
+    cover: '/og-default.png',
+    metrics: [
+      { label: 'Output', value: 'Series v0' },
+      { label: 'Focus', value: 'Stile & coerenza' }
+    ]
   }
 ];
-
-export default projects;

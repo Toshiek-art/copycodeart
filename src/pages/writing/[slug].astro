@@ -1,20 +1,31 @@
 ---
-import BaseLayout from "../../layouts/BaseLayout.astro";
-import writings from "../../data/writing";
-import WritingTemplate from "../../templates/WritingTemplate.astro";
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { writings } from '../../data/writing';
+import WritingTemplate from '../../templates/WritingTemplate.astro';
 
-export function getStaticPaths() {
-  const items = writings.filter(w => w.status === "published" && w.visible);
-  return items.map(w => ({ params: { slug: w.slug }, props: { item: w } }));
+const standalone = Astro.url.searchParams.get('standalone') === '1';
+
+const map = import.meta.glob('../../content/writing/*.astro');
+export async function getStaticPaths() {
+  return writings
+    .filter(w => w.status === 'published')
+    .map(w => ({ params: { slug: w.slug } }));
 }
 
-const { item } = Astro.props;
-const standalone = Astro.url.searchParams.has("standalone");
+const { slug } = Astro.params;
+const item = writings.find(w => w.slug === slug);
+if (!item) throw new Error('Writing not found');
+
+const bodyModule = await map[`../../content/writing/${slug}.astro`]();
 ---
-<BaseLayout
-  title={`${item.title} — Writing — CopyCodeArt`}
-  description={item.excerpt}
-  standalone={standalone}
->
-  <WritingTemplate item={item} standalone={standalone} />
+<BaseLayout title={`${item.title} — Writing`} noindex={standalone}>
+  {!standalone && <nav class="mb-6"><a href="/writing">← Back to Writing</a></nav>}
+  <WritingTemplate item={item}>
+    <bodyModule.default />
+  </WritingTemplate>
+  {standalone && (
+    <a href="/contact" class="fixed bottom-3 left-3 right-3 mx-auto max-w-md text-center py-3 border rounded-lg">
+      Get in touch
+    </a>
+  )}
 </BaseLayout>

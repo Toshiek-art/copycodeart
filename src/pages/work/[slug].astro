@@ -1,21 +1,31 @@
 ---
-import BaseLayout from "../../layouts/BaseLayout.astro";
-import projects from "../../data/projects";
-import ProjectTemplate from "../../templates/ProjectTemplate.astro";
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { projects } from '../../data/projects';
+import ProjectTemplate from '../../templates/ProjectTemplate.astro';
 
-export function getStaticPaths() {
-  const items = projects.filter(p => p.status === "published" && p.visible);
-  return items.map(p => ({ params: { slug: p.slug }, props: { item: p } }));
+const standalone = Astro.url.searchParams.get('standalone') === '1';
+
+const map = import.meta.glob('../../content/work/*.astro');
+export async function getStaticPaths() {
+  return projects
+    .filter(p => p.status === 'published')
+    .map(p => ({ params: { slug: p.slug } }));
 }
 
-const { item } = Astro.props;
-const standalone = Astro.url.searchParams.has("standalone");
+const { slug } = Astro.params;
+const item = projects.find(p => p.slug === slug);
+if (!item) throw new Error('Project not found');
+
+const bodyModule = await map[`../../content/work/${slug}.astro`]();
 ---
-<BaseLayout
-  title={`${item.title} — Work — CopyCodeArt`}
-  description={item.excerpt}
-  standalone={standalone}
-  ogImage={item.cover ?? "/og-default.png"}
->
-  <ProjectTemplate item={item} standalone={standalone} />
+<BaseLayout title={`${item.title} — Work`} noindex={standalone}>
+  {!standalone && <nav class="mb-6"><a href="/work">← Back to Work</a></nav>}
+  <ProjectTemplate item={item}>
+    <bodyModule.default />
+  </ProjectTemplate>
+  {standalone && (
+    <a href="/contact" class="fixed bottom-3 left-3 right-3 mx-auto max-w-md text-center py-3 border rounded-lg">
+      Work with me
+    </a>
+  )}
 </BaseLayout>
