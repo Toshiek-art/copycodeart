@@ -3,20 +3,24 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import { writings } from '../../data/writing';
 import WritingTemplate from '../../templates/WritingTemplate.astro';
 
-const standalone = Astro.url.searchParams.get('standalone') === '1';
-
-const map = import.meta.glob('../../content/writing/*.astro');
 export async function getStaticPaths() {
   return writings
     .filter(w => w.status === 'published')
     .map(w => ({ params: { slug: w.slug } }));
 }
 
+const standalone = Astro.url.searchParams.get('standalone') === '1';
+
+const pages = import.meta.glob('../../content/writing/*.astro');
+
 const { slug } = Astro.params;
 const item = writings.find(w => w.slug === slug);
-if (!item) throw new Error('Writing not found');
+if (!item) throw new Error(`Writing not found: ${slug}`);
 
-const bodyModule = await map[`../../content/writing/${slug}.astro`]();
+const key = Object.keys(pages).find(k => k.endsWith(`/content/writing/${slug}.astro`));
+if (!key) throw new Error(`Body not found for: ${slug}`);
+
+const bodyModule = await pages[key]();
 ---
 <BaseLayout title={`${item.title} — Writing`} noindex={standalone}>
   {!standalone && <nav class="mb-6"><a href="/writing">← Back to Writing</a></nav>}

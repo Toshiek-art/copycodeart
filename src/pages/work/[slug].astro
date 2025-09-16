@@ -3,20 +3,25 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import { projects } from '../../data/projects';
 import ProjectTemplate from '../../templates/ProjectTemplate.astro';
 
-const standalone = Astro.url.searchParams.get('standalone') === '1';
-
-const map = import.meta.glob('../../content/work/*.astro');
 export async function getStaticPaths() {
   return projects
     .filter(p => p.status === 'published')
     .map(p => ({ params: { slug: p.slug } }));
 }
 
+const standalone = Astro.url.searchParams.get('standalone') === '1';
+
+const pages = import.meta.glob('../../content/work/*.astro'); // lazy imports
+
 const { slug } = Astro.params;
 const item = projects.find(p => p.slug === slug);
-if (!item) throw new Error('Project not found');
+if (!item) throw new Error(`Project not found: ${slug}`);
 
-const bodyModule = await map[`../../content/work/${slug}.astro`]();
+// trova la chiave a prescindere dal prefisso
+const key = Object.keys(pages).find(k => k.endsWith(`/content/work/${slug}.astro`));
+if (!key) throw new Error(`Body not found for: ${slug}`);
+
+const bodyModule = await pages[key]();
 ---
 <BaseLayout title={`${item.title} — Work`} noindex={standalone}>
   {!standalone && <nav class="mb-6"><a href="/work">← Back to Work</a></nav>}
